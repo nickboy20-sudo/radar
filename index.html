@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Radar Meteo România – Ventusky Radar</title>
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="Radar Maps for Precipitations - Real-time weather radar for București, Romania">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Radar Meteo">
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" type="image/png" href="/favicon.png" />
-<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -541,15 +534,15 @@
         </button>
 
         <button class="btn" data-src="https://www.ventusky.com/?p=44.43;26.10;7&l=radar" role="tab" aria-selected="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>[...]
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
           Ventusky Radar
         </button>
-        <button class="btn" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&produ[...]
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg[...]
+        <button class="btn" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
           Windy.com România
         </button>
       </div>
-      <div class="rv-timeline" id="rvTimeline" style="display:flex;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);bord[...]
+      <div class="rv-timeline" id="rvTimeline" style="display:flex;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(12px);width:fit-content;">
         <button class="btn" id="playPauseBtn" type="button" style="padding:0.4rem 0.8rem;">⏸️ Pauză</button>
         <span id="rvTime" style="font-variant-numeric:tabular-nums;color:var(--text-dim);font-size:0.9rem;">—</span>
       </div>
@@ -606,7 +599,7 @@
     </main>
 
     <footer>
-      Sursa: <a href="https://www.rainviewer.com" target="_blank" rel="noopener">RainViewer</a> / <a href="https://www.Ventusky Radar" target="_blank" rel="noopener">Ventusky Radar</a> – actual[...]
+      Sursa: <a href="https://www.rainviewer.com" target="_blank" rel="noopener">RainViewer</a> / <a href="https://www.Ventusky Radar" target="_blank" rel="noopener">Ventusky Radar</a> – actualizare live
     </footer>
   </div>
 
@@ -761,7 +754,7 @@
           // update UI
           document.getElementById('locName').textContent = 'Locația mea';
           const locPill = document.querySelectorAll('.location-pill')[0];
-          if (locPill) locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18[...]
+          if (locPill) locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Locația mea`;
           document.querySelector('.info-card-sub').textContent = LAT.toFixed(3) + '°N, ' + LON.toFixed(3) + '°E • România';
 
           if (rvMap) {
@@ -773,7 +766,7 @@
           // update Windy iframe if active
           const windyBtn = Array.from(buttons).find(b => b.textContent.includes('Windy'));
           if (windyBtn && windyBtn.classList.contains('active')) {
-            const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=[...]
+            const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
             showIframe(newSrc);
           }
         }, err => alert('Nu pot accesa locația: ' + err.message));
@@ -791,14 +784,8 @@
 
     // Fallback timeout loader
     setTimeout(() => loader.classList.add('hidden'), 10000);
-
-    // Register service worker for PWA
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
-    }
   })();
 </script>
-<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)pare[...]
-</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
 </body>
 </html>
