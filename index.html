@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Radar Meteo România – Ventusky Radar</title>
+<title>Radar Meteo România – Windy, Ventusky, StiriMeteo</title>
 <meta name="theme-color" content="#0f172a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -506,7 +506,7 @@
             Radar Meteo LIVE
             <span class="live-dot">LIVE</span>
           </h1>
-          <p>Date RainViewer &amp; Ventusky – București</p>
+          <p>Date Windy, Ventusky & StiriMeteo – București</p>
         </div>
       </div>
       <div class="header-meta">
@@ -528,21 +528,22 @@
 
     <main>
       <div class="controls" role="tablist" aria-label="Selectare sursă radar">
-        <button class="btn active" data-src="rainviewer" role="tab" aria-selected="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15h.5a7 7 0 0 0 7-7 .5.5 0 0 1 1 0 7 7 0 0 0 7 7H22"/><path d="M5 21h14"/></svg>
-          RainViewer
+        <button class="btn active" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" role="tab" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          Windy.com
         </button>
 
         <button class="btn" data-src="https://www.ventusky.com/?p=44.43;26.10;7&l=radar" role="tab" aria-selected="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
           Ventusky Radar
         </button>
-        <button class="btn" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" role="tab" aria-selected="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
-          Windy.com România
+
+        <button class="btn" data-src="https://www.stirimeteo.com/vremea-romania/" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15h.5a7 7 0 0 0 7-7 .5.5 0 0 1 1 0 7 7 0 0 0 7 7H22"/><path d="M5 21h14"/></svg>
+          StiriMeteo
         </button>
       </div>
-      <div class="rv-timeline" id="rvTimeline" style="display:flex;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(12px);width:fit-content;">
+      <div class="rv-timeline" id="rvTimeline" style="display:none;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(12px);width:fit-content;">
         <button class="btn" id="playPauseBtn" type="button" style="padding:0.4rem 0.8rem;">⏸️ Pauză</button>
         <span id="rvTime" style="font-variant-numeric:tabular-nums;color:var(--text-dim);font-size:0.9rem;">—</span>
       </div>
@@ -593,13 +594,14 @@
             Status radar
           </div>
           <div class="info-card-value status-ok">Actualizare automată</div>
-          <div class="info-card-sub">RainViewer (radar precipitații animat)</div>
+          <div class="info-card-sub">Windy, Ventusky, StiriMeteo (radar live)</div>
         </div>
       </div>
     </main>
 
     <footer>
-      Sursa: <a href="https://www.rainviewer.com" target="_blank" rel="noopener">RainViewer</a> / <a href="https://www.Ventusky Radar" target="_blank" rel="noopener">Ventusky Radar</a> – actualizare live
+      Surse radar: <a href="https://www.windy.com" target="_blank" rel="noopener">Windy</a> • <a href="https://www.ventusky.com" target="_blank" rel="noopener">Ventusky</a> • <a href="https://www.stirimeteo.com" target="_blank" rel="noopener">StiriMeteo</a><br>
+      Linkuri utile: <a href="https://www.meteoblue.com/ro/country/vreme/radar/romania_romania_798549" target="_blank" rel="noopener" style="color:#38bdf8;">Meteoblue Radar (5 min)</a> • <a href="https://zoom.earth/maps/radar/" target="_blank" rel="noopener" style="color:#38bdf8;">Zoom Earth Live</a>
     </footer>
   </div>
 
@@ -734,11 +736,7 @@
         btn.classList.add('active');
         btn.setAttribute('aria-selected','true');
 
-        if (src === 'rainviewer') {
-          showRainViewer();
-        } else {
-          showIframe(src);
-        }
+        showIframe(src);
       });
     });
 
@@ -779,8 +777,8 @@
       playBtn.addEventListener('click', togglePlayPause);
     }
 
-    // Pornire implicită: RainViewer
-    showRainViewer();
+    // Pornire implicită: Windy
+    showIframe(document.querySelector('.btn.active').dataset.src);
 
     // Fallback timeout loader
     setTimeout(() => loader.classList.add('hidden'), 10000);
