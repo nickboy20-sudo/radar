@@ -196,6 +196,169 @@
     backdrop-filter: blur(12px);
   }
 
+  .search-section {
+    position: relative;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.8s ease-out 0.05s both;
+    z-index: 200;
+  }
+
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .search-wrap:focus-within {
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+  }
+
+  .search-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 1rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    padding: 0.85rem 0.75rem;
+  }
+
+  .search-input::placeholder {
+    color: var(--text-dim);
+  }
+
+  .search-spinner {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgba(148, 163, 184, 0.25);
+    border-top-color: var(--accent);
+    animation: spin 0.7s linear infinite;
+    display: none;
+    flex-shrink: 0;
+  }
+
+  .search-spinner.active {
+    display: block;
+  }
+
+  .search-clear {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 0.6rem;
+    background: rgba(148, 163, 184, 0.12);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-dim);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .search-clear:hover {
+    background: rgba(148, 163, 184, 0.22);
+    color: var(--text);
+  }
+
+  .suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 9999;
+    display: none;
+  }
+
+  .suggestions.open {
+    display: block;
+  }
+
+  .suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s ease;
+  }
+
+  .suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .suggestion-item:hover,
+  .suggestion-item.active {
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .suggestion-item svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .suggestion-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .suggestion-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .suggestion-sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .suggestion-empty,
+  .suggestion-error {
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
   main {
     flex: 1;
     animation: fadeUp 0.8s ease-out 0.1s both;
@@ -275,6 +438,7 @@
       0 0 0 1px rgba(148,163,184,0.05) inset,
       0 0 80px rgba(56,189,248,0.05);
     isolation: isolate;
+    z-index: 1;
   }
 
   .radar-wrap::before {
@@ -480,6 +644,10 @@
       grid-template-columns: 1fr;
       gap: 0.75rem;
     }
+
+    .suggestions {
+      max-height: 260px;
+    }
   }
 
   @media (max-width: 420px) {
@@ -525,6 +693,28 @@
         </button>
       </div>
     </header>
+
+    <div class="search-section">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input
+          type="text"
+          id="citySearch"
+          class="search-input"
+          placeholder="Caută un oraș sau o localitate..."
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="suggestions"
+          aria-autocomplete="list"
+        />
+        <div class="search-spinner" id="searchSpinner"></div>
+        <button class="search-clear" id="searchClear" type="button" aria-label="Șterge căutarea">×</button>
+      </div>
+      <div class="suggestions" id="suggestions" role="listbox"></div>
+    </div>
 
     <main>
       <div class="controls" role="tablist" aria-label="Selectare sursă radar">
@@ -615,6 +805,39 @@
     const dataEl    = document.getElementById('dataCurenta');
 
     let LAT = 44.4268, LON = 26.1025;
+
+    // ── Actualizare locație (folosită de GPS și de căutare) ──────────
+    function applyLocation(lat, lon, label, sub) {
+      LAT = lat;
+      LON = lon;
+
+      document.getElementById('locName').textContent = label;
+      const locPill = document.querySelectorAll('.location-pill')[0];
+      if (locPill) {
+        locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${label}`;
+      }
+      document.querySelector('.info-card-sub').textContent = sub;
+
+      if (rvMap) {
+        rvMap.setView([LAT, LON], 9);
+        if (window.userMarker) {
+          window.userMarker.setLatLng([LAT, LON]).bindPopup(label);
+        }
+      }
+
+      const activeBtn = document.querySelector('.btn.active');
+      if (activeBtn) {
+        if (activeBtn.textContent.includes('Windy')) {
+          const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
+          activeBtn.dataset.src = newSrc;
+          showIframe(newSrc);
+        } else if (activeBtn.textContent.includes('Ventusky')) {
+          const newSrc = `https://www.ventusky.com/?p=${LAT};${LON};8&l=radar`;
+          activeBtn.dataset.src = newSrc;
+          showIframe(newSrc);
+        }
+      }
+    }
 
     // ── Data curentă ────────────────────────────────────────────────
     function updateDate() {
@@ -741,32 +964,163 @@
     });
 
 
+    // ── Căutare locație cu autosugestii ──────────────────────────────
+    (function() {
+      const input       = document.getElementById('citySearch');
+      const suggBox     = document.getElementById('suggestions');
+      const spinner     = document.getElementById('searchSpinner');
+      const clearBtn    = document.getElementById('searchClear');
+      if (!input || !suggBox) return;
+
+      let debounceTimer = null;
+      let currentResults = [];
+      let activeIndex = -1;
+      let lastQuery = '';
+
+      function countryName(code) {
+        const map = { RO:'România', MD:'Moldova', HU:'Ungaria', BG:'Bulgaria', RS:'Serbia', UA:'Ucraina', DE:'Germania', FR:'Franța', IT:'Italia', ES:'Spania', GB:'Marea Britanie', US:'SUA' };
+        return map[code] || code || '';
+      }
+
+      function closeSuggestions() {
+        suggBox.classList.remove('open');
+        suggBox.innerHTML = '';
+        input.setAttribute('aria-expanded', 'false');
+        activeIndex = -1;
+        document.getElementById('radarFrame').style.pointerEvents = '';
+        document.getElementById('rainviewerMap').style.pointerEvents = '';
+      }
+
+      function renderMessage(text, type) {
+        suggBox.innerHTML = `<div class="suggestion-${type}">${text}</div>`;
+        suggBox.classList.add('open');
+        document.getElementById('radarFrame').style.pointerEvents = 'none';
+        document.getElementById('rainviewerMap').style.pointerEvents = 'none';
+      }
+
+      function renderResults(results) {
+        currentResults = results;
+        activeIndex = -1;
+        if (!results.length) {
+          renderMessage('Nicio localitate găsită', 'empty');
+          return;
+        }
+        suggBox.innerHTML = results.map((r, i) => {
+          const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
+          return `<div class="suggestion-item" role="option" data-idx="${i}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div class="suggestion-text">
+              <span class="suggestion-name">${r.name}</span>
+              <span class="suggestion-sub">${parts.join(', ')}</span>
+            </div>
+          </div>`;
+        }).join('');
+        suggBox.classList.add('open');
+        input.setAttribute('aria-expanded', 'true');
+        document.getElementById('radarFrame').style.pointerEvents = 'none';
+        document.getElementById('rainviewerMap').style.pointerEvents = 'none';
+
+        suggBox.querySelectorAll('.suggestion-item').forEach(el => {
+          el.addEventListener('click', () => {
+            selectResult(currentResults[parseInt(el.dataset.idx, 10)]);
+          });
+        });
+      }
+
+      function setActive(idx) {
+        const items = suggBox.querySelectorAll('.suggestion-item');
+        items.forEach(el => el.classList.remove('active'));
+        if (idx >= 0 && items[idx]) {
+          items[idx].classList.add('active');
+          items[idx].scrollIntoView({ block: 'nearest' });
+        }
+        activeIndex = idx;
+      }
+
+      function selectResult(r) {
+        if (!r) return;
+        const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
+        applyLocation(r.latitude, r.longitude, r.name, r.latitude.toFixed(3) + '°N, ' + r.longitude.toFixed(3) + '°E • ' + (parts.join(', ') || 'România'));
+        input.value = r.name;
+        clearBtn.style.display = 'flex';
+        closeSuggestions();
+        input.blur();
+      }
+
+      function search(query) {
+        spinner.classList.add('active');
+        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=ro&format=json`)
+          .then(r => r.json())
+          .then(data => {
+            spinner.classList.remove('active');
+            if (input.value.trim() !== lastQuery) return; // răspuns întârziat, ignorat
+            renderResults(data.results || []);
+          })
+          .catch(() => {
+            spinner.classList.remove('active');
+            renderMessage('Eroare la căutare. Încearcă din nou.', 'error');
+          });
+      }
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim();
+        clearBtn.style.display = q ? 'flex' : 'none';
+        clearTimeout(debounceTimer);
+
+        if (q.length < 2) {
+          closeSuggestions();
+          spinner.classList.remove('active');
+          return;
+        }
+
+        debounceTimer = setTimeout(() => {
+          lastQuery = q;
+          search(q);
+        }, 350);
+      });
+
+      input.addEventListener('keydown', (e) => {
+        const items = suggBox.querySelectorAll('.suggestion-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setActive((activeIndex + 1) % items.length);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setActive((activeIndex - 1 + items.length) % items.length);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const idx = activeIndex >= 0 ? activeIndex : 0;
+          selectResult(currentResults[idx]);
+        } else if (e.key === 'Escape') {
+          closeSuggestions();
+        }
+      });
+
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        closeSuggestions();
+        input.focus();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-section')) {
+          closeSuggestions();
+        }
+      });
+    })();
+
     // GPS button
     const gpsBtn = document.getElementById('gpsBtn');
     if (gpsBtn) {
       gpsBtn.addEventListener('click', () => {
         if (!navigator.geolocation) { alert('GPS indisponibil'); return; }
         navigator.geolocation.getCurrentPosition(pos => {
-          LAT = pos.coords.latitude;
-          LON = pos.coords.longitude;
-          // update UI
-          document.getElementById('locName').textContent = 'Locația mea';
-          const locPill = document.querySelectorAll('.location-pill')[0];
-          if (locPill) locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Locația mea`;
-          document.querySelector('.info-card-sub').textContent = LAT.toFixed(3) + '°N, ' + LON.toFixed(3) + '°E • România';
-
-          if (rvMap) {
-            rvMap.setView([LAT, LON], 9);
-            if (window.userMarker) {
-              window.userMarker.setLatLng([LAT, LON]).bindPopup('Locația ta');
-            }
-          }
-          // update Windy iframe if active
-          const windyBtn = Array.from(buttons).find(b => b.textContent.includes('Windy'));
-          if (windyBtn && windyBtn.classList.contains('active')) {
-            const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
-            showIframe(newSrc);
-          }
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          applyLocation(lat, lon, 'Locația mea', lat.toFixed(3) + '°N, ' + lon.toFixed(3) + '°E • România');
         }, err => alert('Nu pot accesa locația: ' + err.message));
       });
     }
