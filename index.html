@@ -674,7 +674,7 @@
             Radar Meteo LIVE
             <span class="live-dot">LIVE</span>
           </h1>
-          <p>Date Windy, Ventusky & StiriMeteo – București</p>
+          <p>Date Windy, Ventusky & StiriMeteo – Ulmi</p>
         </div>
       </div>
       <div class="header-meta">
@@ -683,7 +683,7 @@
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          București
+          Ulmi
         </div>
         <button class="location-pill" id="gpsBtn" type="button" title="Folosește locația mea" style="cursor:pointer; transition:all 0.2s; color:#ffffff;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -718,13 +718,13 @@
 
     <main>
       <div class="controls" role="tablist" aria-label="Selectare sursă radar">
-        <button class="btn active" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" role="tab" aria-selected="true">
+        <button class="btn active" data-src="https://embed.windy.com/embed2.html?lat=44.0181&lon=25.8069&detailLat=44.0181&detailLon=25.8069&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=" role="tab" aria-selected="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
           Windy.com
         </button>
 
-        <button class="btn" data-src="https://www.ventusky.com/?p=44.43;26.10;7&l=radar" role="tab" aria-selected="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        <button class="btn" data-src="https://www.ventusky.com/?p=44.0181;25.8069;7&l=radar" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
           Ventusky Radar
         </button>
 
@@ -733,7 +733,7 @@
           StiriMeteo
         </button>
       </div>
-      <div class="rv-timeline" id="rvTimeline" style="display:none;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(12px);width:fit-content;">
+      <div class="rv-timeline" id="rvTimeline" style="display:none;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:16px;backdrop-filter:blur(16px);">
         <button class="btn" id="playPauseBtn" type="button" style="padding:0.4rem 0.8rem;">⏸️ Pauză</button>
         <span id="rvTime" style="font-variant-numeric:tabular-nums;color:var(--text-dim);font-size:0.9rem;">—</span>
       </div>
@@ -765,8 +765,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Locație monitorizată
           </div>
-          <div class="info-card-value" id="locName">București</div>
-          <div class="info-card-sub">44.427°N, 26.103°E • România</div>
+          <div class="info-card-value" id="locName">Ulmi</div>
+          <div class="info-card-sub">44.0181°N, 25.8069°E • Giurgiu, România</div>
         </div>
 
         <div class="info-card">
@@ -775,7 +775,7 @@
             Data și ora curentă
           </div>
           <div class="info-card-value" id="dataCurenta">—</div>
-          <div class="info-card-sub">Ora locală București</div>
+          <div class="info-card-sub">Ora locală României</div>
         </div>
 
         <div class="info-card">
@@ -790,8 +790,8 @@
     </main>
 
     <footer>
-      Surse radar: <a href="https://www.windy.com" target="_blank" rel="noopener">Windy</a> • <a href="https://www.ventusky.com" target="_blank" rel="noopener">Ventusky</a> • <a href="https://www.stirimeteo.com" target="_blank" rel="noopener">StiriMeteo</a><br>
-      Linkuri utile: <a href="https://www.meteoblue.com/ro/country/vreme/radar/romania_romania_798549" target="_blank" rel="noopener" style="color:#38bdf8;">Meteoblue Radar (5 min)</a> • <a href="https://zoom.earth/maps/radar/" target="_blank" rel="noopener" style="color:#38bdf8;">Zoom Earth Live</a>
+      Surse radar: <a href="https://www.windy.com" target="_blank" rel="noopener">Windy</a> • <a href="https://www.ventusky.com" target="_blank" rel="noopener">Ventusky</a> • <a href="https://www.stirimeteo.com" target="_blank" rel="noopener">StiriMeteo</a> • 
+      Linkuri utile: <a href="https://www.meteoblue.com/ro/country/vreme/radar/romania_romania_798549" target="_blank" rel="noopener" style="color:#38bdf8;">Meteoblue Radar (5 min)</a>
     </footer>
   </div>
 
@@ -804,7 +804,7 @@
     const buttons   = document.querySelectorAll('.btn');
     const dataEl    = document.getElementById('dataCurenta');
 
-    let LAT = 44.4268, LON = 26.1025;
+    let LAT = 44.0181, LON = 25.8069;
 
     // ── Actualizare locație (folosită de GPS și de căutare) ──────────
     function applyLocation(lat, lon, label, sub) {
@@ -814,7 +814,7 @@
       document.getElementById('locName').textContent = label;
       const locPill = document.querySelectorAll('.location-pill')[0];
       if (locPill) {
-        locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${label}`;
+        locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${label}`;
       }
       document.querySelector('.info-card-sub').textContent = sub;
 
@@ -828,7 +828,7 @@
       const activeBtn = document.querySelector('.btn.active');
       if (activeBtn) {
         if (activeBtn.textContent.includes('Windy')) {
-          const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
+          const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=`;
           activeBtn.dataset.src = newSrc;
           showIframe(newSrc);
         } else if (activeBtn.textContent.includes('Ventusky')) {
@@ -868,7 +868,7 @@
       window.userMarker = L.circleMarker([LAT, LON], {
         radius: 8, color: '#0ea5e9', fillColor: '#38bdf8',
         fillOpacity: 0.9, weight: 2
-      }).addTo(rvMap).bindPopup('București');
+      }).addTo(rvMap).bindPopup('Ulmi, Giurgiu');
 
       loadRainViewerFrames();
     }
@@ -963,6 +963,31 @@
       });
     });
 
+    // Play/Pause button handler
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', togglePlayPause);
+    }
+
+    // GPS button handler
+    const gpsBtn = document.getElementById('gpsBtn');
+    if (gpsBtn) {
+      gpsBtn.addEventListener('click', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              applyLocation(latitude, longitude, `Poziția mea (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`, `Coordonate GPS: ${latitude.toFixed(4)}°N, ${longitude.toFixed(4)}°E`);
+            },
+            () => {
+              alert('Nu s-a putut obține locația. Verifică permisiunile GPS.');
+            }
+          );
+        } else {
+          alert('Geolocation nu este suportată pe acest dispozitiv.');
+        }
+      });
+    }
 
     // ── Căutare locație cu autosugestii ──────────────────────────────
     (function() {
@@ -998,105 +1023,103 @@
         document.getElementById('rainviewerMap').style.pointerEvents = 'none';
       }
 
-      function renderResults(results) {
-        currentResults = results;
-        activeIndex = -1;
+      function renderSuggestions(results) {
         if (!results.length) {
-          renderMessage('Nicio localitate găsită', 'empty');
+          renderMessage('Niciun rezultat găsit', 'empty');
           return;
         }
-        suggBox.innerHTML = results.map((r, i) => {
-          const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
-          return `<div class="suggestion-item" role="option" data-idx="${i}">
+        currentResults = results;
+        activeIndex = -1;
+        suggBox.innerHTML = results.map((r, i) => `
+          <div class="suggestion-item" data-idx="${i}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <div class="suggestion-text">
-              <span class="suggestion-name">${r.name}</span>
-              <span class="suggestion-sub">${parts.join(', ')}</span>
+              <div class="suggestion-name">${r.name}</div>
+              <div class="suggestion-sub">${r.admin1 || ''} ${r.admin1 ? '•' : ''} ${countryName(r.country_code)}</div>
             </div>
-          </div>`;
-        }).join('');
+          </div>
+        `).join('');
         suggBox.classList.add('open');
         input.setAttribute('aria-expanded', 'true');
         document.getElementById('radarFrame').style.pointerEvents = 'none';
         document.getElementById('rainviewerMap').style.pointerEvents = 'none';
 
-        suggBox.querySelectorAll('.suggestion-item').forEach(el => {
-          el.addEventListener('click', () => {
-            selectResult(currentResults[parseInt(el.dataset.idx, 10)]);
+        suggBox.querySelectorAll('.suggestion-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const idx = parseInt(item.dataset.idx);
+            const r = results[idx];
+            applyLocation(r.latitude, r.longitude, r.name, `${r.admin1 || ''} • ${countryName(r.country_code)}`);
+            input.value = r.name;
+            closeSuggestions();
           });
         });
       }
 
-      function setActive(idx) {
-        const items = suggBox.querySelectorAll('.suggestion-item');
-        items.forEach(el => el.classList.remove('active'));
-        if (idx >= 0 && items[idx]) {
-          items[idx].classList.add('active');
-          items[idx].scrollIntoView({ block: 'nearest' });
+      function search(q) {
+        if (!q.trim()) {
+          closeSuggestions();
+          return;
         }
-        activeIndex = idx;
-      }
-
-      function selectResult(r) {
-        if (!r) return;
-        const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
-        applyLocation(r.latitude, r.longitude, r.name, r.latitude.toFixed(3) + '°N, ' + r.longitude.toFixed(3) + '°E • ' + (parts.join(', ') || 'România'));
-        input.value = r.name;
-        clearBtn.style.display = 'flex';
-        closeSuggestions();
-        input.blur();
-      }
-
-      function search(query) {
         spinner.classList.add('active');
-        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=ro&format=json`)
+        lastQuery = q;
+        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=8&language=ro&format=json`)
           .then(r => r.json())
           .then(data => {
+            if (lastQuery !== q) return;
             spinner.classList.remove('active');
-            if (input.value.trim() !== lastQuery) return; // răspuns întârziat, ignorat
-            renderResults(data.results || []);
+            if (data.results && data.results.length) {
+              renderSuggestions(data.results);
+            } else {
+              renderMessage('Niciun rezultat', 'empty');
+            }
           })
           .catch(() => {
-            spinner.classList.remove('active');
-            renderMessage('Eroare la căutare. Încearcă din nou.', 'error');
+            if (lastQuery === q) {
+              spinner.classList.remove('active');
+              renderMessage('Eroare la căutare', 'error');
+            }
           });
       }
 
-      input.addEventListener('input', () => {
-        const q = input.value.trim();
-        clearBtn.style.display = q ? 'flex' : 'none';
+      input.addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
-
-        if (q.length < 2) {
+        const q = e.target.value.trim();
+        if (!q) {
           closeSuggestions();
-          spinner.classList.remove('active');
-          return;
+          clearBtn.style.display = 'none';
+        } else {
+          clearBtn.style.display = 'flex';
+          debounceTimer = setTimeout(() => search(q), 300);
         }
-
-        debounceTimer = setTimeout(() => {
-          lastQuery = q;
-          search(q);
-        }, 350);
       });
 
       input.addEventListener('keydown', (e) => {
-        const items = suggBox.querySelectorAll('.suggestion-item');
-        if (!items.length) return;
-
         if (e.key === 'ArrowDown') {
           e.preventDefault();
-          setActive((activeIndex + 1) % items.length);
+          activeIndex = Math.min(activeIndex + 1, currentResults.length - 1);
+          updateActiveIndex();
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
-          setActive((activeIndex - 1 + items.length) % items.length);
+          activeIndex = Math.max(activeIndex - 1, -1);
+          updateActiveIndex();
         } else if (e.key === 'Enter') {
           e.preventDefault();
-          const idx = activeIndex >= 0 ? activeIndex : 0;
-          selectResult(currentResults[idx]);
+          if (activeIndex >= 0 && currentResults[activeIndex]) {
+            const r = currentResults[activeIndex];
+            applyLocation(r.latitude, r.longitude, r.name, `${r.admin1 || ''} • ${countryName(r.country_code)}`);
+            input.value = r.name;
+            closeSuggestions();
+          }
         } else if (e.key === 'Escape') {
           closeSuggestions();
         }
       });
+
+      function updateActiveIndex() {
+        suggBox.querySelectorAll('.suggestion-item').forEach((item, i) => {
+          item.classList.toggle('active', i === activeIndex);
+        });
+      }
 
       clearBtn.addEventListener('click', () => {
         input.value = '';
@@ -1106,38 +1129,12 @@
       });
 
       document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-section')) {
+        if (!suggBox.contains(e.target) && e.target !== input) {
           closeSuggestions();
         }
       });
     })();
-
-    // GPS button
-    const gpsBtn = document.getElementById('gpsBtn');
-    if (gpsBtn) {
-      gpsBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) { alert('GPS indisponibil'); return; }
-        navigator.geolocation.getCurrentPosition(pos => {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-          applyLocation(lat, lon, 'Locația mea', lat.toFixed(3) + '°N, ' + lon.toFixed(3) + '°E • România');
-        }, err => alert('Nu pot accesa locația: ' + err.message));
-      });
-    }
-
-    // Play/Pause
-    const playBtn = document.getElementById('playPauseBtn');
-    if (playBtn) {
-      playBtn.addEventListener('click', togglePlayPause);
-    }
-
-    // Pornire implicită: Windy
-    showIframe(document.querySelector('.btn.active').dataset.src);
-
-    // Fallback timeout loader
-    setTimeout(() => loader.classList.add('hidden'), 10000);
   })();
 </script>
-<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
 </body>
 </html>
