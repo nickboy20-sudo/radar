@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar Meteo România – Windy, Ventusky, StiriMeteo</title>
+<meta name="theme-color" content="#0f172a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg-dark: #020617;
+    --bg-mid: #0f172a;
+    --bg-light: #1e293b;
+    --accent: #38bdf8;
+    --accent-2: #0ea5e9;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --border: rgba(148, 163, 184, 0.15);
+    --glass: rgba(15, 23, 42, 0.7);
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(800px circle at 15% 20%, rgba(56, 189, 248, 0.15), transparent 50%),
+      radial-gradient(600px circle at 85% 80%, rgba(14, 165, 233, 0.1), transparent 50%),
+      linear-gradient(180deg, #020617 0%, #0f172a 40%, #1e293b 100%);
+    z-index: -2;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(148,163,184,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(40px, 40px); }
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0 1.5rem;
+    flex-wrap: wrap;
+    animation: fadeDown 0.8s ease-out;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo {
+    width: 52px;
+    height: 52px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius: 16px;
+    box-shadow:
+      0 0 30px rgba(56, 189, 248, 0.3),
+      inset 0 1px 1px rgba(255,255,255,0.2);
+    overflow: hidden;
+  }
+
+  .logo::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: spin 3s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .logo svg {
+    width: 28px;
+    height: 28px;
+    color: #020617;
+    z-index: 1;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+  }
+
+  .brand-text h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .live-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .live-dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+
+  .brand-text p {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    margin-top: 0.15rem;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  .location-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+  }
+
+  .search-section {
+    position: relative;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.8s ease-out 0.05s both;
+    z-index: 200;
+  }
+
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .search-wrap:focus-within {
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+  }
+
+  .search-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 1rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    padding: 0.85rem 0.75rem;
+  }
+
+  .search-input::placeholder {
+    color: var(--text-dim);
+  }
+
+  .search-spinner {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid rgba(148, 163, 184, 0.25);
+    border-top-color: var(--accent);
+    animation: spin 0.7s linear infinite;
+    display: none;
+    flex-shrink: 0;
+  }
+
+  .search-spinner.active {
+    display: block;
+  }
+
+  .search-clear {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 0.6rem;
+    background: rgba(148, 163, 184, 0.12);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-dim);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .search-clear:hover {
+    background: rgba(148, 163, 184, 0.22);
+    color: var(--text);
+  }
+
+  .suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 9999;
+    display: none;
+  }
+
+  .suggestions.open {
+    display: block;
+  }
+
+  .suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s ease;
+  }
+
+  .suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .suggestion-item:hover,
+  .suggestion-item.active {
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .suggestion-item svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .suggestion-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .suggestion-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .suggestion-sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .suggestion-empty,
+  .suggestion-error {
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  main {
+    flex: 1;
+    animation: fadeUp 0.8s ease-out 0.1s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.4rem;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .controls::-webkit-scrollbar { display: none; }
+
+  .btn {
+    position: relative;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    border-radius: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .btn:hover {
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.08);
+  }
+
+  .btn.active {
+    color: #020617;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow:
+      0 4px 15px rgba(56, 189, 248, 0.3),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+  }
+
+  .radar-wrap {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 480px;
+    max-height: 820px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #020617;
+    border: 1px solid var(--border);
+    box-shadow:
+      0 25px 50px -12px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(148,163,184,0.05) inset,
+      0 0 80px rgba(56,189,248,0.05);
+    isolation: isolate;
+    z-index: 1;
+  }
+
+  .radar-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, var(--accent), transparent 30%, transparent 70%, var(--accent-2));
+    border-radius: 24px;
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(20px);
+  }
+
+  #radarFrame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #0a1220;
+    transition: opacity 0.4s ease;
+  }
+
+  .loader {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at center, rgba(2,6,23,0.95), rgba(2,6,23,0.98));
+    z-index: 10;
+    transition: opacity 0.3s ease, visibility 0.3s;
+  }
+
+  .loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .loader-content {
+    text-align: center;
+  }
+
+  .spinner {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    position: relative;
+  }
+
+  .spinner::before,
+  .spinner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid transparent;
+  }
+
+  .spinner::before {
+    border-top-color: var(--accent);
+    border-right-color: var(--accent);
+    animation: spin 1s linear infinite;
+  }
+
+  .spinner::after {
+    border-bottom-color: var(--accent-2);
+    border-left-color: var(--accent-2);
+    animation: spin 1s linear infinite reverse;
+    inset: 6px;
+  }
+
+  .loader-text {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.9rem;
+    margin-top: 1.25rem;
+  }
+
+  .info-card {
+    position: relative;
+    padding: 1.1rem 1.25rem;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .info-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.3);
+  }
+
+  .info-card:hover::before {
+    opacity: 1;
+  }
+
+  .info-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .info-card-header svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+  }
+
+  .info-card-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .info-card-sub {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+
+  .status-ok {
+    color: #4ade80;
+  }
+
+  footer {
+    margin-top: 2.5rem;
+    padding: 1.5rem 0 1rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover {
+    color: var(--accent-2);
+    text-decoration: underline;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0.5rem 0 1.25rem;
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+    }
+
+    .controls {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .btn {
+      padding: 0.6rem 0.9rem;
+      font-size: 0.85rem;
+    }
+
+    .radar-wrap {
+      height: 70vh;
+      min-height: 420px;
+      border-radius: 20px;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .suggestions {
+      max-height: 260px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .brand { gap: 0.75rem; }
+    .logo { width: 44px; height: 44px; border-radius: 12px; }
+    .logo svg { width: 24px; height: 24px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/>
+            <path d="M3 12a6 6 0 1 0 12 0 6 6 0 0 0-12 0"/>
+            <path d="M3 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/>
+            <circle cx="12" cy="12" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>
+            Radar Meteo LIVE
+            <span class="live-dot">LIVE</span>
+          </h1>
+          <p>Date Windy, Ventusky & StiriMeteo – București</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="location-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          București
+        </div>
+        <button class="location-pill" id="gpsBtn" type="button" title="Folosește locația mea" style="cursor:pointer; transition:all 0.2s; color:#ffffff;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/>
+          </svg>
+          GPS
+        </button>
+      </div>
+    </header>
+
+    <div class="search-section">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input
+          type="text"
+          id="citySearch"
+          class="search-input"
+          placeholder="Caută un oraș sau o localitate..."
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="suggestions"
+          aria-autocomplete="list"
+        />
+        <div class="search-spinner" id="searchSpinner"></div>
+        <button class="search-clear" id="searchClear" type="button" aria-label="Șterge căutarea">×</button>
+      </div>
+      <div class="suggestions" id="suggestions" role="listbox"></div>
+    </div>
+
+    <main>
+      <div class="controls" role="tablist" aria-label="Selectare sursă radar">
+        <button class="btn active" data-src="https://embed.windy.com/embed2.html?lat=44.4268&lon=26.1025&detailLat=44.4268&detailLon=26.1025&width=650&height=450&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" role="tab" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          Windy.com
+        </button>
+
+        <button class="btn" data-src="https://www.ventusky.com/?p=44.43;26.10;7&l=radar" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          Ventusky Radar
+        </button>
+
+        <button class="btn" data-src="https://www.stirimeteo.com/vremea-romania/" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15h.5a7 7 0 0 0 7-7 .5.5 0 0 1 1 0 7 7 0 0 0 7 7H22"/><path d="M5 21h14"/></svg>
+          StiriMeteo
+        </button>
+      </div>
+      <div class="rv-timeline" id="rvTimeline" style="display:none;align-items:center;gap:0.75rem;margin:0 0 1rem;padding:0.5rem 0.9rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(12px);width:fit-content;">
+        <button class="btn" id="playPauseBtn" type="button" style="padding:0.4rem 0.8rem;">⏸️ Pauză</button>
+        <span id="rvTime" style="font-variant-numeric:tabular-nums;color:var(--text-dim);font-size:0.9rem;">—</span>
+      </div>
+
+      <div class="radar-wrap">
+        <div class="loader" id="loader">
+          <div class="loader-content">
+            <div class="spinner"></div>
+            <div class="loader-text">Se încarcă radarul meteo...</div>
+          </div>
+        </div>
+        <!-- RainViewer map container (Leaflet) -->
+        <div id="rainviewerMap" style="width:100%;height:100%;"></div>
+        <!-- iframe pentru Windy / meteoradar -->
+        <iframe
+          id="radarFrame"
+          src=""
+          title="Radar Meteo România"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;display:none;">
+        </iframe>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Locație monitorizată
+          </div>
+          <div class="info-card-value" id="locName">București</div>
+          <div class="info-card-sub">44.427°N, 26.103°E • România</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Data și ora curentă
+          </div>
+          <div class="info-card-value" id="dataCurenta">—</div>
+          <div class="info-card-sub">Ora locală București</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Status radar
+          </div>
+          <div class="info-card-value status-ok">Actualizare automată</div>
+          <div class="info-card-sub">Windy, Ventusky, StiriMeteo (radar live)</div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      Surse radar: <a href="https://www.windy.com" target="_blank" rel="noopener">Windy</a> • <a href="https://www.ventusky.com" target="_blank" rel="noopener">Ventusky</a> • <a href="https://www.stirimeteo.com" target="_blank" rel="noopener">StiriMeteo</a><br>
+      Linkuri utile: <a href="https://www.meteoblue.com/ro/country/vreme/radar/romania_romania_798549" target="_blank" rel="noopener" style="color:#38bdf8;">Meteoblue Radar (5 min)</a> • <a href="https://zoom.earth/maps/radar/" target="_blank" rel="noopener" style="color:#38bdf8;">Zoom Earth Live</a>
+    </footer>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  (function() {
+    const iframe    = document.getElementById('radarFrame');
+    const mapDiv    = document.getElementById('rainviewerMap');
+    const loader    = document.getElementById('loader');
+    const buttons   = document.querySelectorAll('.btn');
+    const dataEl    = document.getElementById('dataCurenta');
+
+    let LAT = 44.4268, LON = 26.1025;
+
+    // ── Actualizare locație (folosită de GPS și de căutare) ──────────
+    function applyLocation(lat, lon, label, sub) {
+      LAT = lat;
+      LON = lon;
+
+      document.getElementById('locName').textContent = label;
+      const locPill = document.querySelectorAll('.location-pill')[0];
+      if (locPill) {
+        locPill.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${label}`;
+      }
+      document.querySelector('.info-card-sub').textContent = sub;
+
+      if (rvMap) {
+        rvMap.setView([LAT, LON], 9);
+        if (window.userMarker) {
+          window.userMarker.setLatLng([LAT, LON]).bindPopup(label);
+        }
+      }
+
+      const activeBtn = document.querySelector('.btn.active');
+      if (activeBtn) {
+        if (activeBtn.textContent.includes('Windy')) {
+          const newSrc = `https://embed.windy.com/embed2.html?lat=${LAT}&lon=${LON}&detailLat=${LAT}&detailLon=${LON}&width=650&height=450&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
+          activeBtn.dataset.src = newSrc;
+          showIframe(newSrc);
+        } else if (activeBtn.textContent.includes('Ventusky')) {
+          const newSrc = `https://www.ventusky.com/?p=${LAT};${LON};8&l=radar`;
+          activeBtn.dataset.src = newSrc;
+          showIframe(newSrc);
+        }
+      }
+    }
+
+    // ── Data curentă ────────────────────────────────────────────────
+    function updateDate() {
+      const now = new Date();
+      dataEl.textContent = now.toLocaleDateString('ro-RO', {
+        weekday:'long', year:'numeric', month:'long', day:'numeric',
+        hour:'2-digit', minute:'2-digit'
+      });
+    }
+    updateDate();
+    setInterval(updateDate, 30000);
+
+    // ── RainViewer Leaflet map ───────────────────────────────────────
+    let rvMap = null, rvLayer = null, rvFrames = [], rvIdx = 0, rvTimer = null;
+
+    function initRainViewer() {
+      if (rvMap) { rvMap.invalidateSize(); return; }
+
+      rvMap = L.map('rainviewerMap', { zoomControl: true, attributionControl: true })
+               .setView([LAT, LON], 7);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd', maxZoom: 19
+      }).addTo(rvMap);
+
+      // marker locatie
+      window.userMarker = L.circleMarker([LAT, LON], {
+        radius: 8, color: '#0ea5e9', fillColor: '#38bdf8',
+        fillOpacity: 0.9, weight: 2
+      }).addTo(rvMap).bindPopup('București');
+
+      loadRainViewerFrames();
+    }
+
+    function loadRainViewerFrames() {
+      fetch('https://api.rainviewer.com/public/weather-maps.json')
+        .then(r => r.json())
+        .then(data => {
+          rvFrames = data.radar.past.concat(data.radar.nowcast || []);
+          rvIdx    = rvFrames.length - 1;
+          showFrame(rvIdx);
+          startAnimation();
+          loader.classList.add('hidden');
+        })
+        .catch(() => loader.classList.add('hidden'));
+    }
+
+    function showFrame(idx) {
+      if (!rvMap || !rvFrames.length) return;
+      if (rvLayer) rvMap.removeLayer(rvLayer);
+      const f = rvFrames[idx];
+      rvLayer = L.tileLayer(
+        `https://tilecache.rainviewer.com${f.path}/256/{z}/{x}/{y}/2/1_1.png`,
+        { opacity: 0.75, tileSize: 256, zIndex: 10 }
+      ).addTo(rvMap);
+      // update time
+      const timeEl = document.getElementById('rvTime');
+      if (timeEl && f.time) {
+        const d = new Date(f.time * 1000);
+        timeEl.textContent = d.toLocaleString('ro-RO', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'short' });
+      }
+    }
+
+    let isPlaying = true;
+    function startAnimation() {
+      clearInterval(rvTimer);
+      isPlaying = true;
+      document.getElementById('playPauseBtn').textContent = '⏸️ Pauză';
+      rvTimer = setInterval(() => {
+        rvIdx = (rvIdx + 1) % rvFrames.length;
+        showFrame(rvIdx);
+      }, 600);
+    }
+
+    function togglePlayPause() {
+      if (isPlaying) {
+        clearInterval(rvTimer);
+        isPlaying = false;
+        document.getElementById('playPauseBtn').textContent = '▶️ Play';
+      } else {
+        startAnimation();
+      }
+    }
+
+    function destroyRainViewer() {
+      clearInterval(rvTimer);
+      rvTimer = null;
+    }
+
+    // ── Schimbare sursă ─────────────────────────────────────────────
+    function showRainViewer() {
+      document.getElementById('rvTimeline').style.display = 'flex';
+      mapDiv.style.display  = 'block';
+      iframe.style.display  = 'none';
+      iframe.src = '';
+      loader.classList.remove('hidden');
+      initRainViewer();
+    }
+
+    function showIframe(src) {
+      document.getElementById('rvTimeline').style.display = 'none';
+      destroyRainViewer();
+      mapDiv.style.display  = 'none';
+      iframe.style.display  = 'block';
+      loader.classList.remove('hidden');
+      iframe.src = src;
+    }
+
+    iframe.addEventListener('load', () => {
+      setTimeout(() => loader.classList.add('hidden'), 400);
+    });
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.dataset.src;
+
+        buttons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+
+        showIframe(src);
+      });
+    });
+
+
+    // ── Căutare locație cu autosugestii ──────────────────────────────
+    (function() {
+      const input       = document.getElementById('citySearch');
+      const suggBox     = document.getElementById('suggestions');
+      const spinner     = document.getElementById('searchSpinner');
+      const clearBtn    = document.getElementById('searchClear');
+      if (!input || !suggBox) return;
+
+      let debounceTimer = null;
+      let currentResults = [];
+      let activeIndex = -1;
+      let lastQuery = '';
+
+      function countryName(code) {
+        const map = { RO:'România', MD:'Moldova', HU:'Ungaria', BG:'Bulgaria', RS:'Serbia', UA:'Ucraina', DE:'Germania', FR:'Franța', IT:'Italia', ES:'Spania', GB:'Marea Britanie', US:'SUA' };
+        return map[code] || code || '';
+      }
+
+      function closeSuggestions() {
+        suggBox.classList.remove('open');
+        suggBox.innerHTML = '';
+        input.setAttribute('aria-expanded', 'false');
+        activeIndex = -1;
+        document.getElementById('radarFrame').style.pointerEvents = '';
+        document.getElementById('rainviewerMap').style.pointerEvents = '';
+      }
+
+      function renderMessage(text, type) {
+        suggBox.innerHTML = `<div class="suggestion-${type}">${text}</div>`;
+        suggBox.classList.add('open');
+        document.getElementById('radarFrame').style.pointerEvents = 'none';
+        document.getElementById('rainviewerMap').style.pointerEvents = 'none';
+      }
+
+      function renderResults(results) {
+        currentResults = results;
+        activeIndex = -1;
+        if (!results.length) {
+          renderMessage('Nicio localitate găsită', 'empty');
+          return;
+        }
+        suggBox.innerHTML = results.map((r, i) => {
+          const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
+          return `<div class="suggestion-item" role="option" data-idx="${i}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div class="suggestion-text">
+              <span class="suggestion-name">${r.name}</span>
+              <span class="suggestion-sub">${parts.join(', ')}</span>
+            </div>
+          </div>`;
+        }).join('');
+        suggBox.classList.add('open');
+        input.setAttribute('aria-expanded', 'true');
+        document.getElementById('radarFrame').style.pointerEvents = 'none';
+        document.getElementById('rainviewerMap').style.pointerEvents = 'none';
+
+        suggBox.querySelectorAll('.suggestion-item').forEach(el => {
+          el.addEventListener('click', () => {
+            selectResult(currentResults[parseInt(el.dataset.idx, 10)]);
+          });
+        });
+      }
+
+      function setActive(idx) {
+        const items = suggBox.querySelectorAll('.suggestion-item');
+        items.forEach(el => el.classList.remove('active'));
+        if (idx >= 0 && items[idx]) {
+          items[idx].classList.add('active');
+          items[idx].scrollIntoView({ block: 'nearest' });
+        }
+        activeIndex = idx;
+      }
+
+      function selectResult(r) {
+        if (!r) return;
+        const parts = [r.admin1, countryName(r.country_code)].filter(Boolean);
+        applyLocation(r.latitude, r.longitude, r.name, r.latitude.toFixed(3) + '°N, ' + r.longitude.toFixed(3) + '°E • ' + (parts.join(', ') || 'România'));
+        input.value = r.name;
+        clearBtn.style.display = 'flex';
+        closeSuggestions();
+        input.blur();
+      }
+
+      function search(query) {
+        spinner.classList.add('active');
+        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=ro&format=json`)
+          .then(r => r.json())
+          .then(data => {
+            spinner.classList.remove('active');
+            if (input.value.trim() !== lastQuery) return; // răspuns întârziat, ignorat
+            renderResults(data.results || []);
+          })
+          .catch(() => {
+            spinner.classList.remove('active');
+            renderMessage('Eroare la căutare. Încearcă din nou.', 'error');
+          });
+      }
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim();
+        clearBtn.style.display = q ? 'flex' : 'none';
+        clearTimeout(debounceTimer);
+
+        if (q.length < 2) {
+          closeSuggestions();
+          spinner.classList.remove('active');
+          return;
+        }
+
+        debounceTimer = setTimeout(() => {
+          lastQuery = q;
+          search(q);
+        }, 350);
+      });
+
+      input.addEventListener('keydown', (e) => {
+        const items = suggBox.querySelectorAll('.suggestion-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setActive((activeIndex + 1) % items.length);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setActive((activeIndex - 1 + items.length) % items.length);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const idx = activeIndex >= 0 ? activeIndex : 0;
+          selectResult(currentResults[idx]);
+        } else if (e.key === 'Escape') {
+          closeSuggestions();
+        }
+      });
+
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        closeSuggestions();
+        input.focus();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-section')) {
+          closeSuggestions();
+        }
+      });
+    })();
+
+    // GPS button
+    const gpsBtn = document.getElementById('gpsBtn');
+    if (gpsBtn) {
+      gpsBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) { alert('GPS indisponibil'); return; }
+        navigator.geolocation.getCurrentPosition(pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          applyLocation(lat, lon, 'Locația mea', lat.toFixed(3) + '°N, ' + lon.toFixed(3) + '°E • România');
+        }, err => alert('Nu pot accesa locația: ' + err.message));
+      });
+    }
+
+    // Play/Pause
+    const playBtn = document.getElementById('playPauseBtn');
+    if (playBtn) {
+      playBtn.addEventListener('click', togglePlayPause);
+    }
+
+    // Pornire implicită: Windy
+    showIframe(document.querySelector('.btn.active').dataset.src);
+
+    // Fallback timeout loader
+    setTimeout(() => loader.classList.add('hidden'), 10000);
+  })();
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
